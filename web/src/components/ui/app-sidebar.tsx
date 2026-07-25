@@ -1,10 +1,9 @@
+import { Link } from "@tanstack/react-router"
 import { CirclePlus, Route, Calendar } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -17,10 +16,12 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton>
-                <CirclePlus />
-                New Trip
-              </SidebarMenuButton>
+              <Link to="/">
+                <SidebarMenuButton>
+                  <CirclePlus />
+                  New Trip
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton>
