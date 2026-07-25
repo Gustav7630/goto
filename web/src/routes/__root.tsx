@@ -1,6 +1,8 @@
 import { Outlet, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
+import { SidebarProvider } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/ui/app-sidebar"
 
 import "../styles.css"
 
@@ -10,7 +12,8 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <>
+    <SidebarProvider>
+      <AppSidebar />
       <Outlet />
       <TanStackDevtools
         config={{
@@ -23,6 +26,6 @@ function RootComponent() {
           },
         ]}
       />
-    </>
+    </SidebarProvider>
   )
 }
