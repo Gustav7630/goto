@@ -6,7 +6,7 @@ import "maplibre-gl/dist/maplibre-gl.css"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
 
-export const Route = createFileRoute("/trips/$tripId")({ component: TripPage })
+export const Route = createFileRoute("/_authenticated/trips/$tripId")({ component: TripPage })
 
 function TripPage() {
   return (

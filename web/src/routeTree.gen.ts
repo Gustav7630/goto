@@ -9,68 +9,117 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as TripsTripIdRouteImport } from './routes/trips.$tripId'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as PreferencesRouteImport } from './routes/preferences'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedTripsTripIdRouteImport } from './routes/_authenticated/trips.$tripId'
 
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreferencesRoute = PreferencesRouteImport.update({
+  id: '/preferences',
+  path: '/preferences',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const TripsTripIdRoute = TripsTripIdRouteImport.update({
-  id: '/trips/$tripId',
-  path: '/trips/$tripId',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const AuthenticatedTripsTripIdRoute =
+  AuthenticatedTripsTripIdRouteImport.update({
+    id: '/trips/$tripId',
+    path: '/trips/$tripId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/trips/$tripId': typeof TripsTripIdRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/preferences': typeof PreferencesRoute
+  '/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/trips/$tripId': typeof TripsTripIdRoute
+  '/preferences': typeof PreferencesRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/trips/$tripId': typeof TripsTripIdRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/preferences': typeof PreferencesRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/trips/$tripId'
+  fullPaths: '/' | '/preferences' | '/trips/$tripId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/trips/$tripId'
-  id: '__root__' | '/' | '/trips/$tripId'
+  to: '/preferences' | '/' | '/trips/$tripId'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/preferences'
+    | '/_authenticated/'
+    | '/_authenticated/trips/$tripId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  TripsTripIdRoute: typeof TripsTripIdRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  PreferencesRoute: typeof PreferencesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/trips/$tripId': {
-      id: '/trips/$tripId'
+    '/preferences': {
+      id: '/preferences'
+      path: '/preferences'
+      fullPath: '/preferences'
+      preLoaderRoute: typeof PreferencesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/trips/$tripId': {
+      id: '/_authenticated/trips/$tripId'
       path: '/trips/$tripId'
       fullPath: '/trips/$tripId'
-      preLoaderRoute: typeof TripsTripIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTripsTripIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedTripsTripIdRoute: typeof AuthenticatedTripsTripIdRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedTripsTripIdRoute: AuthenticatedTripsTripIdRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  TripsTripIdRoute: TripsTripIdRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  PreferencesRoute: PreferencesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
