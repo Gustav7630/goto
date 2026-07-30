@@ -2,6 +2,7 @@ import { useMemo } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 
@@ -94,6 +95,10 @@ function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
       {...props}
     />
   )
+}
+
+function FieldInput(props: React.ComponentProps<typeof Input>) {
+  return <Input {...props} />
 }
 
 function FieldLabel({
@@ -224,6 +229,7 @@ function FieldError({
 
 export {
   Field,
+  FieldInput,
   FieldLabel,
   FieldDescription,
   FieldError,
