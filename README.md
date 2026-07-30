@@ -10,7 +10,6 @@ In the future, the app will support shared trip planning, notes, media, offline 
 ```text
 server/    # FastAPI application
 web/       # React application
-AGENTS.md  # Review guidance for AI tools
 README.md
 ```
 
