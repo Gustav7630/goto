@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 import { createFileRoute, Link } from "@tanstack/react-router"
 
 import { Button } from "@/components/ui/button"
@@ -15,11 +17,61 @@ import {
   FieldLabel,
   FieldSeparator,
 } from "@/components/ui/field"
+import { Spinner } from "@/components/ui/spinner"
+
+import { supabase } from "@/lib/supabase"
 
 export const Route = createFileRoute("/sign-up")({ component: Component })
 
 function Component() {
   const navigate = Route.useNavigate()
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  async function handleSignUp() {
+    setLoading(true)
+
+    if (!email) {
+      setLoading(false)
+      alert("No email provided")
+      return
+    }
+
+    if (!password) {
+      setLoading(false)
+      alert("No password provided")
+      return
+    }
+
+    if (!confirmPassword) {
+      setLoading(false)
+      alert("No confirm password provided")
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setLoading(false)
+      alert("Password is different from confirm password")
+      return
+    }
+
+    const { data, error } = await supabase.auth.signUp({ email, password })
+
+    if (error) {
+      setLoading(false)
+      alert("Error")
+      console.error(error)
+      return
+    }
+
+    setLoading(false)
+    console.log(data)
+
+    navigate({ to: "/preferences" })
+  }
 
   return (
     <main className="flex h-screen items-center justify-center">
@@ -36,6 +88,9 @@ function Component() {
                 type="email"
                 placeholder="Enter your email"
                 className="rounded-md"
+                value={email}
+                required
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Field>
             <Field>
@@ -45,6 +100,9 @@ function Component() {
                 type="password"
                 placeholder="Create a password"
                 className="rounded-md"
+                value={password}
+                required
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Field>
             <Field>
@@ -56,16 +114,14 @@ function Component() {
                 type="password"
                 placeholder="Repeat your password"
                 className="rounded-md"
+                value={confirmPassword}
+                required
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </Field>
           </FieldGroup>
-          <Button
-            onClick={() => {
-              navigate({ to: "/preferences" })
-            }}
-            className="w-full rounded-md p-6"
-          >
-            Sign Up
+          <Button onClick={handleSignUp} className="w-full rounded-md p-6">
+            {loading ? <Spinner /> : <>Sign Up</>}
           </Button>
           <FieldSeparator>OR</FieldSeparator>
           <Button

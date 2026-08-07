@@ -34,10 +34,19 @@ README.md
 
 ## Local Development
 
-Run the frontend.
+1. Copy `web/.env.example` to `web/.env.local`
+
+```sh
+cp web/.env.example web/.env.local
+```
+
+2. Edit environment variables in `web/.env.local`
+
+3. Run the frontend
 
 ```sh
 cd web
 pnpm install
 pnpm dev
 ```
+
