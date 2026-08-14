@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException
-from server.models import Note
-from supabase import create_client, Client
-
 import os
 import uuid
+
 from dotenv import load_dotenv
+from fastapi import APIRouter, HTTPException
+from supabase import Client, create_client
+
+from server.models import Note
 
 load_dotenv()
 

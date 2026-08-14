@@ -1,4 +1,5 @@
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
+
 from .routes import notes
 
 app = FastAPI()
