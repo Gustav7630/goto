@@ -3,9 +3,8 @@ import uuid
 
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
+from src.models import Note
 from supabase import Client, create_client
-
-from server.models import Note
 
 load_dotenv()
 
