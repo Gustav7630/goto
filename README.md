@@ -50,3 +50,12 @@ pnpm install
 pnpm dev
 ```
 
+4. Run the backend
+
+```sh
+cd backend
+uv sync
+uv run uvicorn src.main:app --reload 
+
+```
+

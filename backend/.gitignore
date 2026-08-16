@@ -1,8 +1,8 @@
-_pycache_
-**/_pycache_/
-**/_.ruff_cache/
+
+__pycache__
+.ruff_cache
 .env
 .venv/
 
 
-.python-version
+
