@@ -20,9 +20,6 @@ router = APIRouter()
 async def create_note(note: Note) -> Note:
     result = supabase.table("notes").insert(note.model_dump(mode="json")).execute()
 
-    print("RESULT:", result)
-    print("DATA:", result.data)
-
     if not result.data:
         raise HTTPException(status_code= 500, detail = "Unable to create note")
     return Note(**result.data[0])
