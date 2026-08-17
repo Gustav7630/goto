@@ -16,12 +16,10 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Link to="/">
-                <SidebarMenuButton>
-                  <CirclePlus />
-                  New Trip
-                </SidebarMenuButton>
-              </Link>
+              <SidebarMenuButton render={<Link to="/" />}>
+                <CirclePlus />
+                New Trip
+              </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton>
@@ -30,7 +28,7 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton>
+              <SidebarMenuButton render={<Link to="/calendar" />}>
                 <Calendar />
                 Calendar
               </SidebarMenuButton>

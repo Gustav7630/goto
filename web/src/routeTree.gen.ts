@@ -14,6 +14,7 @@ import { Route as PreferencesRouteImport } from './routes/preferences'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedTripsTripIdRouteImport } from './routes/_authenticated/trips.$tripId'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -40,6 +41,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedTripsTripIdRoute =
   AuthenticatedTripsTripIdRouteImport.update({
     id: '/trips/$tripId',
@@ -52,12 +58,14 @@ export interface FileRoutesByFullPath {
   '/preferences': typeof PreferencesRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
   '/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
 }
 export interface FileRoutesByTo {
   '/preferences': typeof PreferencesRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
   '/': typeof AuthenticatedIndexRoute
   '/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
 }
@@ -67,20 +75,34 @@ export interface FileRoutesById {
   '/preferences': typeof PreferencesRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/preferences' | '/sign-in' | '/sign-up' | '/trips/$tripId'
+  fullPaths:
+    | '/'
+    | '/preferences'
+    | '/sign-in'
+    | '/sign-up'
+    | '/calendar'
+    | '/trips/$tripId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/preferences' | '/sign-in' | '/sign-up' | '/' | '/trips/$tripId'
+  to:
+    | '/preferences'
+    | '/sign-in'
+    | '/sign-up'
+    | '/calendar'
+    | '/'
+    | '/trips/$tripId'
   id:
     | '__root__'
     | '/_authenticated'
     | '/preferences'
     | '/sign-in'
     | '/sign-up'
+    | '/_authenticated/calendar'
     | '/_authenticated/'
     | '/_authenticated/trips/$tripId'
   fileRoutesById: FileRoutesById
@@ -129,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/calendar': {
+      id: '/_authenticated/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof AuthenticatedCalendarRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/trips/$tripId': {
       id: '/_authenticated/trips/$tripId'
       path: '/trips/$tripId'
@@ -140,11 +169,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedTripsTripIdRoute: typeof AuthenticatedTripsTripIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedTripsTripIdRoute: AuthenticatedTripsTripIdRoute,
 }
