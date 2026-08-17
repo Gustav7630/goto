@@ -5,8 +5,8 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
 export function AppSidebar() {
@@ -16,23 +16,21 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Link to="/">
-                <SidebarMenuButton>
-                  <CirclePlus />
-                  New Trip
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton>
-                <Route />
-                All Trips
+              <SidebarMenuButton render={<Link to="/" />}>
+                <CirclePlus />
+                <span>New Trip</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton>
+              <SidebarMenuButton render={<Link to="/trips" />}>
+                <Route />
+                <span>Search Trips</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton type="button">
                 <Calendar />
-                Calendar
+                <span>Calendar</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
