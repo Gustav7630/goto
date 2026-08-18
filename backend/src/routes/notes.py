@@ -1,12 +1,12 @@
 import os
 import uuid
-
+from datetime import UTC, datetime
 
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
-from src.models import Note, NoteUpdate
 from supabase import Client, create_client
-from datetime import UTC, datetime
+
+from src.models import Note, NoteUpdate
 
 load_dotenv()
 
