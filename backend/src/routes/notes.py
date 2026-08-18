@@ -1,10 +1,12 @@
 import os
 import uuid
 
+
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
-from src.models import Note
+from src.models import Note, NoteUpdate
 from supabase import Client, create_client
+from datetime import UTC, datetime
 
 load_dotenv()
 
@@ -37,8 +39,23 @@ async def get_note(note_id: uuid.UUID) -> Note:
 
 
 @router.put("/notes/{note_id}")
-async def update_note(note_id: uuid.UUID) -> Note:
-    raise HTTPException(status_code=404, detail=f"Note {note_id} not found")
+async def update_note(note_id: uuid.UUID,updated_note: NoteUpdate) -> Note:
+    existing = (supabase.table("notes").select("*").eq("id",note_id).execute())
+    
+    if not existing.data:
+        raise HTTPException(status_code=404, detail=f"Note {note_id} not found")
+    
+    update_data = updated_note.model_dump(exclude_unset = True,mode="json")
+    
+    if not update_data: 
+         raise HTTPException(status_code=400, detail="No data provided to update")
+    else:
+
+        update_data["updated_at"] = datetime.now(UTC).isoformat()
+        supabase.table("notes").update(update_data).eq("id",note_id).execute()
+        result = supabase.table("notes").select("*").eq("id", str(note_id)).execute()
+
+        return Note(**result.data[0])
 
 @router.delete("/notes/{note_id}")
 async def delete_note(note_id: uuid.UUID):
@@ -46,6 +63,8 @@ async def delete_note(note_id: uuid.UUID):
 
     if not existing.data:
         raise HTTPException(status_code=404, detail=f"Note {note_id} not found")
+
+    
     else:
         supabase.table("notes").delete().eq("id",note_id).execute()
         return Note(existing.data[0])

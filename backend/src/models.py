@@ -12,3 +12,9 @@ class Note(BaseModel):
     creator_id: uuid.UUID
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
+
+class NoteUpdate(BaseModel):
+    title: str = None
+    description: str = None
+    
