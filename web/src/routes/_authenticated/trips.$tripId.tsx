@@ -33,10 +33,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 
 export const Route = createFileRoute("/_authenticated/trips/$tripId")({
-  component: TripPage,
+  component: Component,
 })
 
-function TripPage() {
+function Component() {
   return (
     <main className="flex min-h-svh w-full overflow-hidden bg-background">
       <section className="flex min-w-0 flex-1 flex-col border-r md:w-[28.25rem] md:flex-none">
