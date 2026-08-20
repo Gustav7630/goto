@@ -35,7 +35,7 @@ async def get_note(note_id: uuid.UUID) -> Note:
             raise HTTPException(status_code=404, detail=f"Note {note_id} not found")
     else:
             
-            return Note(existing.data[0])
+            return Note(**existing.data[0])
 
 
 @router.put("/notes/{note_id}")
@@ -67,5 +67,5 @@ async def delete_note(note_id: uuid.UUID):
     
     else:
         supabase.table("notes").delete().eq("id",note_id).execute()
-        return Note(existing.data[0])
+        return Note(**existing.data[0])
         
