@@ -101,14 +101,6 @@ type Note = {
   updatedAt: string
 }
 
-function createNoteId() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID()
-  }
-
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`
-}
-
 function readNotes(storageKey: string): Note[] {
   try {
     const storedNotes = window.localStorage.getItem(storageKey)
@@ -175,7 +167,7 @@ function Gallery() {
       )
     } else {
       setNotes((currentNotes) => [
-        { id: createNoteId(), title, description, updatedAt },
+        { id: crypto.randomUUID(), title, description, updatedAt },
         ...currentNotes,
       ])
     }
