@@ -8,4 +8,4 @@ app.include_router(notes.router)
 
 @app.get("/")
 async def root():
-    return {"message": "Hello Bigger Applications!"}
+    return {"message": "Status - Ok"}
