@@ -1,5 +1,7 @@
-import { type FormEvent, useEffect, useMemo, useState } from "react"
+import { type SubmitEvent, useEffect, useMemo, useState } from "react"
+
 import { createFileRoute } from "@tanstack/react-router"
+
 import {
   BookImage,
   CalendarDays,
@@ -8,10 +10,12 @@ import {
   StickyNote,
   Trash2,
 } from "lucide-react"
+
 import Map from "react-map-gl/maplibre"
 import "maplibre-gl/dist/maplibre-gl.css"
 
 import { Button } from "@/components/ui/button"
+
 import {
   Card,
   CardAction,
@@ -19,6 +23,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+
 import {
   Empty,
   EmptyContent,
@@ -27,8 +32,17 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { Field, FieldError, FieldLabel } from "@/components/ui/field"
+
+import {
+  Field,
+  FieldError,
+  FieldLabel,
+  FieldSet,
+  FieldGroup,
+} from "@/components/ui/field"
+
 import { Input } from "@/components/ui/input"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 
@@ -39,30 +53,25 @@ export const Route = createFileRoute("/_authenticated/trips/$tripId")({
 function Component() {
   return (
     <main className="flex min-h-svh w-full overflow-hidden bg-background">
-      <section className="flex min-w-0 flex-1 flex-col border-r md:w-[28.25rem] md:flex-none">
-        <header className="px-6 py-7 md:px-8">
+      <section className="flex flex-1 flex-col">
+        <header className="p-8">
           <h1 className="font-heading text-2xl font-bold">London Trip</h1>
         </header>
 
         <Tabs defaultValue="gallery" className="min-h-0 flex-1 gap-0">
-          <TabsList variant="line" className="h-14 w-full gap-0 px-0">
-            <TabsTrigger
-              value="schedule"
-              className="h-full rounded-none text-base [&_svg]:size-6"
-            >
+          <TabsList variant="line" className="w-full gap-0 px-0">
+            <TabsTrigger value="schedule">
               <CalendarDays aria-hidden="true" />
               Schedule
             </TabsTrigger>
-            <TabsTrigger
-              value="gallery"
-              className="h-full rounded-none text-base [&_svg]:size-6"
-            >
+
+            <TabsTrigger value="gallery">
               <BookImage aria-hidden="true" />
               Gallery
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="schedule" className="min-h-0">
+          <TabsContent value="schedule">
             <Empty className="h-full rounded-none">
               <EmptyHeader>
                 <EmptyTitle>No events yet</EmptyTitle>
@@ -70,7 +79,7 @@ function Component() {
             </Empty>
           </TabsContent>
 
-          <TabsContent value="gallery" className="min-h-0 overflow-y-auto">
+          <TabsContent value="gallery">
             <Gallery />
           </TabsContent>
         </Tabs>
@@ -125,7 +134,9 @@ function readNotes(storageKey: string): Note[] {
 
 function Gallery() {
   const { tripId } = Route.useParams()
+
   const storageKey = `goto:trip:${tripId}:notes`
+
   const [notes, setNotes] = useState<Note[]>(() => readNotes(storageKey))
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
   const [editorOpen, setEditorOpen] = useState(false)
@@ -177,6 +188,7 @@ function Gallery() {
 
   const deleteNote = (note: Note) => {
     const noteName = note.title || "this note"
+
     if (!window.confirm(`Delete ${noteName}? This cannot be undone.`)) return
 
     setNotes((currentNotes) =>
@@ -197,7 +209,7 @@ function Gallery() {
 
   if (notes.length === 0) {
     return (
-      <Empty className="h-full min-h-96 rounded-none px-8">
+      <Empty className="h-full">
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <StickyNote aria-hidden="true" />
@@ -209,7 +221,7 @@ function Gallery() {
         </EmptyHeader>
         <EmptyContent>
           <Button
-            className="h-14 w-full text-base font-bold [&_svg]:size-6"
+            className="h-16 w-full text-base font-bold [&_svg]:size-6"
             onClick={openNewNote}
           >
             <Plus data-icon="inline-start" aria-hidden="true" />
@@ -298,7 +310,7 @@ function NoteEditor({ mode, note, onCancel, onSubmit }: NoteEditorProps) {
   const [description, setDescription] = useState(note?.description ?? "")
   const [descriptionError, setDescriptionError] = useState("")
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const cleanDescription = description.trim()
@@ -315,65 +327,68 @@ function NoteEditor({ mode, note, onCancel, onSubmit }: NoteEditorProps) {
 
   return (
     <form
-      className="flex min-h-full flex-col"
       onSubmit={handleSubmit}
       noValidate
+      className="flex h-full flex-col gap-8 p-8"
     >
-      <div className="border-b px-6 py-6 md:px-8">
-        <h2 className="text-xl font-bold">
-          {mode === "new" ? "New Note" : "Edit Note"}
-        </h2>
-      </div>
+      <FieldSet className="flex-1">
+        <FieldGroup className="flex-1">
+          <Field>
+            <FieldLabel htmlFor="note-title">Title</FieldLabel>
+            <Input
+              id="note-title"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              placeholder="Optional title"
+              autoComplete="off"
+              maxLength={100}
+              className="h-11 rounded-2xl"
+            />
+          </Field>
 
-      <div className="flex flex-1 flex-col gap-6 p-6 md:p-8">
-        <Field>
-          <FieldLabel htmlFor="note-title">Title</FieldLabel>
-          <Input
-            id="note-title"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            placeholder="Optional title"
-            autoComplete="off"
-            maxLength={100}
-            className="h-11 rounded-2xl"
-          />
-        </Field>
+          <Field data-invalid={Boolean(descriptionError)} className="flex-1">
+            <FieldLabel htmlFor="note-description">
+              Description <span className="text-destructive">*</span>
+            </FieldLabel>
 
-        <Field data-invalid={Boolean(descriptionError)}>
-          <FieldLabel htmlFor="note-description">
-            Description <span className="text-destructive">*</span>
-          </FieldLabel>
-          <Textarea
-            id="note-description"
-            value={description}
-            onChange={(event) => {
-              setDescription(event.target.value)
-              if (event.target.value.trim()) setDescriptionError("")
-            }}
-            placeholder="What do you want to remember?"
-            rows={8}
-            required
-            maxLength={2000}
-            aria-invalid={Boolean(descriptionError)}
-            aria-describedby={
-              descriptionError ? "note-description-error" : undefined
-            }
-            className="min-h-48"
-          />
-          <FieldError id="note-description-error">
-            {descriptionError}
-          </FieldError>
-        </Field>
-      </div>
+            <Textarea
+              id="note-description"
+              value={description}
+              onChange={(event) => {
+                setDescription(event.target.value)
+                if (event.target.value.trim()) setDescriptionError("")
+              }}
+              placeholder="What do you want to remember?"
+              required
+              maxLength={2000}
+              aria-invalid={Boolean(descriptionError)}
+              aria-describedby={
+                descriptionError ? "note-description-error" : undefined
+              }
+              className="flex-1"
+            />
 
-      <div className="sticky bottom-0 mt-auto flex flex-col-reverse gap-2 border-t bg-background/95 p-6 backdrop-blur sm:flex-row sm:justify-end md:px-8">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button type="submit">
-          {mode === "new" ? "Create Note" : "Save Note"}
-        </Button>
-      </div>
+            <FieldError id="note-description-error">
+              {descriptionError}
+            </FieldError>
+          </Field>
+
+          <Field orientation="horizontal">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+
+            <Button type="submit" className="flex-1">
+              {mode === "new" ? "Create Note" : "Save Note"}
+            </Button>
+          </Field>
+        </FieldGroup>
+      </FieldSet>
     </form>
   )
 }
