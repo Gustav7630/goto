@@ -47,7 +47,7 @@ type Note = {
   updatedAt: string
 }
 
-const createNoteId = () => {
+function createNoteId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID()
   }
@@ -55,7 +55,7 @@ const createNoteId = () => {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`
 }
 
-const readNotes = (storageKey: string): Note[] => {
+function readNotes(storageKey: string): Note[] {
   try {
     const storedNotes = window.localStorage.getItem(storageKey)
     if (!storedNotes) return []
