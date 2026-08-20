@@ -74,99 +74,6 @@ export const Route = createFileRoute("/_authenticated/trips/$tripId")({
 })
 
 function TripPage() {
-  const { tripId } = Route.useParams()
-  const storageKey = `goto:trip:${tripId}:notes`
-  const [notes, setNotes] = useState<Note[]>(() => readNotes(storageKey))
-  const [editorOpen, setEditorOpen] = useState(false)
-  const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [descriptionError, setDescriptionError] = useState("")
-
-  useEffect(() => {
-    window.localStorage.setItem(storageKey, JSON.stringify(notes))
-  }, [notes, storageKey])
-
-  const editingNote = useMemo(
-    () => notes.find((note) => note.id === editingNoteId),
-    [editingNoteId, notes]
-  )
-
-  const resetEditor = () => {
-    setEditingNoteId(null)
-    setTitle("")
-    setDescription("")
-    setDescriptionError("")
-  }
-
-  const openNewNote = () => {
-    resetEditor()
-    setEditorOpen(true)
-  }
-
-  const openEditNote = (note: Note) => {
-    setEditingNoteId(note.id)
-    setTitle(note.title)
-    setDescription(note.description)
-    setDescriptionError("")
-    setEditorOpen(true)
-  }
-
-  const closeEditor = () => {
-    setEditorOpen(false)
-    resetEditor()
-  }
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    const cleanDescription = description.trim()
-    if (!cleanDescription) {
-      setDescriptionError("Add a description before saving your note.")
-      return
-    }
-
-    const cleanTitle = title.trim()
-    const updatedAt = new Date().toISOString()
-
-    if (editingNoteId) {
-      setNotes((currentNotes) =>
-        currentNotes.map((note) =>
-          note.id === editingNoteId
-            ? {
-                ...note,
-                title: cleanTitle,
-                description: cleanDescription,
-                updatedAt,
-              }
-            : note
-        )
-      )
-    } else {
-      setNotes((currentNotes) => [
-        {
-          id: createNoteId(),
-          title: cleanTitle,
-          description: cleanDescription,
-          updatedAt,
-        },
-        ...currentNotes,
-      ])
-    }
-
-    setEditorOpen(false)
-    resetEditor()
-  }
-
-  const deleteNote = (note: Note) => {
-    const noteName = note.title || "this note"
-    if (!window.confirm(`Delete ${noteName}? This cannot be undone.`)) return
-
-    setNotes((currentNotes) =>
-      currentNotes.filter((item) => item.id !== note.id)
-    )
-  }
-
   return (
     <main className="flex min-h-svh w-full overflow-hidden bg-background">
       <section className="flex min-w-0 flex-1 flex-col border-r md:w-[28.25rem] md:flex-none">
@@ -201,118 +108,7 @@ function TripPage() {
           </TabsContent>
 
           <TabsContent value="gallery" className="min-h-0 overflow-y-auto">
-            {editorOpen ? (
-              <form
-                className="flex min-h-full flex-col"
-                onSubmit={handleSubmit}
-                noValidate
-              >
-                <div className="border-b px-6 py-6 md:px-8">
-                  <h2 className="text-xl font-bold">
-                    {editingNote ? "Edit note" : "New note"}
-                  </h2>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {editingNote
-                      ? "Update the details for this trip note."
-                      : "Add something you want to remember for this trip."}
-                  </p>
-                </div>
-
-                <div className="flex flex-1 flex-col gap-6 p-6 md:p-8">
-                  <Field>
-                    <FieldLabel htmlFor="note-title">Title</FieldLabel>
-                    <Input
-                      id="note-title"
-                      value={title}
-                      onChange={(event) => setTitle(event.target.value)}
-                      placeholder="Optional title"
-                      autoComplete="off"
-                      maxLength={100}
-                      className="h-11 rounded-2xl"
-                    />
-                  </Field>
-
-                  <Field data-invalid={Boolean(descriptionError)}>
-                    <FieldLabel htmlFor="note-description">
-                      Description <span className="text-destructive">*</span>
-                    </FieldLabel>
-                    <Textarea
-                      id="note-description"
-                      value={description}
-                      onChange={(event) => {
-                        setDescription(event.target.value)
-                        if (event.target.value.trim()) setDescriptionError("")
-                      }}
-                      placeholder="What do you want to remember?"
-                      rows={8}
-                      required
-                      maxLength={2000}
-                      aria-invalid={Boolean(descriptionError)}
-                      aria-describedby={
-                        descriptionError ? "note-description-error" : undefined
-                      }
-                      className="min-h-48"
-                    />
-                    <FieldError id="note-description-error">
-                      {descriptionError}
-                    </FieldError>
-                  </Field>
-                </div>
-
-                <div className="sticky bottom-0 mt-auto flex flex-col-reverse gap-2 border-t bg-background/95 p-6 backdrop-blur sm:flex-row sm:justify-end md:px-8">
-                  <Button type="button" variant="outline" onClick={closeEditor}>
-                    Cancel
-                  </Button>
-                  <Button type="submit">
-                    {editingNote ? "Save changes" : "Create note"}
-                  </Button>
-                </div>
-              </form>
-            ) : notes.length === 0 ? (
-              <Empty className="h-full min-h-96 rounded-none px-8">
-                <EmptyHeader>
-                  <EmptyMedia variant="icon">
-                    <StickyNote aria-hidden="true" />
-                  </EmptyMedia>
-                  <EmptyTitle>No notes yet</EmptyTitle>
-                  <EmptyDescription>
-                    Save ideas, places, and reminders for your trip.
-                  </EmptyDescription>
-                </EmptyHeader>
-                <EmptyContent>
-                  <Button
-                    className="h-14 w-full text-base font-bold [&_svg]:size-6"
-                    onClick={openNewNote}
-                  >
-                    <Plus data-icon="inline-start" aria-hidden="true" />
-                    New note
-                  </Button>
-                </EmptyContent>
-              </Empty>
-            ) : (
-              <div className="flex min-h-full flex-col">
-                <div className="grid gap-4 p-6 md:p-8">
-                  {notes.map(({ id, title, description, updatedAt }) => (
-                    <NoteCard
-                      id={id}
-                      title={title}
-                      description={description}
-                      updatedAt={updatedAt}
-                    />
-                  ))}
-                </div>
-
-                <div className="sticky bottom-0 mt-auto border-t bg-background/95 p-6 backdrop-blur md:px-8">
-                  <Button
-                    className="h-14 w-full text-base font-bold [&_svg]:size-6"
-                    onClick={openNewNote}
-                  >
-                    <Plus data-icon="inline-start" aria-hidden="true" />
-                    New note
-                  </Button>
-                </div>
-              </div>
-            )}
+            <Gallery />
           </TabsContent>
         </Tabs>
       </section>
@@ -335,14 +131,137 @@ function TripPage() {
   )
 }
 
+function Gallery() {
+  const { tripId } = Route.useParams()
+  const storageKey = `goto:trip:${tripId}:notes`
+  const [notes, setNotes] = useState<Note[]>(() => readNotes(storageKey))
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
+  const [editorOpen, setEditorOpen] = useState(false)
+
+  useEffect(() => {
+    window.localStorage.setItem(storageKey, JSON.stringify(notes))
+  }, [notes, storageKey])
+
+  const editingNote = useMemo(
+    () => notes.find((note) => note.id === editingNoteId),
+    [editingNoteId, notes]
+  )
+
+  const openNewNote = () => {
+    setEditingNoteId(null)
+    setEditorOpen(true)
+  }
+
+  const openEditNote = (note: Note) => {
+    setEditingNoteId(note.id)
+    setEditorOpen(true)
+  }
+
+  const closeEditor = () => {
+    setEditorOpen(false)
+    setEditingNoteId(null)
+  }
+
+  const saveNote = ({ title, description }: NoteEditorValues) => {
+    const updatedAt = new Date().toISOString()
+
+    if (editingNoteId) {
+      setNotes((currentNotes) =>
+        currentNotes.map((note) =>
+          note.id === editingNoteId
+            ? { ...note, title, description, updatedAt }
+            : note
+        )
+      )
+    } else {
+      setNotes((currentNotes) => [
+        { id: createNoteId(), title, description, updatedAt },
+        ...currentNotes,
+      ])
+    }
+
+    closeEditor()
+  }
+
+  const deleteNote = (note: Note) => {
+    const noteName = note.title || "this note"
+    if (!window.confirm(`Delete ${noteName}? This cannot be undone.`)) return
+
+    setNotes((currentNotes) =>
+      currentNotes.filter((item) => item.id !== note.id)
+    )
+  }
+
+  if (editorOpen) {
+    return (
+      <NoteEditor
+        mode={editingNote ? "edit" : "new"}
+        note={editingNote}
+        onCancel={closeEditor}
+        onSubmit={saveNote}
+      />
+    )
+  }
+
+  if (notes.length === 0) {
+    return (
+      <Empty className="h-full min-h-96 rounded-none px-8">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <StickyNote aria-hidden="true" />
+          </EmptyMedia>
+          <EmptyTitle>No notes yet</EmptyTitle>
+          <EmptyDescription>
+            Save ideas, places, and reminders for your trip.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button
+            className="h-14 w-full text-base font-bold [&_svg]:size-6"
+            onClick={openNewNote}
+          >
+            <Plus data-icon="inline-start" aria-hidden="true" />
+            New note
+          </Button>
+        </EmptyContent>
+      </Empty>
+    )
+  }
+
+  return (
+    <div className="flex min-h-full flex-col">
+      <div className="grid gap-4 p-6 md:p-8">
+        {notes.map((note) => (
+          <NoteCard
+            key={note.id}
+            {...note}
+            onEdit={() => openEditNote(note)}
+            onDelete={() => deleteNote(note)}
+          />
+        ))}
+      </div>
+
+      <div className="sticky bottom-0 mt-auto border-t bg-background/95 p-6 backdrop-blur md:px-8">
+        <Button
+          className="h-14 w-full text-base font-bold [&_svg]:size-6"
+          onClick={openNewNote}
+        >
+          <Plus data-icon="inline-start" aria-hidden="true" />
+          New note
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 type NoteCardProps = Note & {
   onEdit?: () => void
   onDelete?: () => void
 }
 
-function NoteCard({ id, title, description, onEdit, onDelete }: NoteCardProps) {
+function NoteCard({ title, description, onEdit, onDelete }: NoteCardProps) {
   return (
-    <Card key={id} className="gap-2">
+    <Card className="gap-2">
       <CardHeader className="flex flex-row items-center">
         <CardTitle className="flex-1 font-bold">
           {title || "Untitled"}
@@ -370,5 +289,97 @@ function NoteCard({ id, title, description, onEdit, onDelete }: NoteCardProps) {
       </CardHeader>
       <CardContent>{description}</CardContent>
     </Card>
+  )
+}
+
+type NoteEditorValues = Pick<Note, "title" | "description">
+
+type NoteEditorProps = {
+  mode: "new" | "edit"
+  note?: Note
+  onCancel: () => void
+  onSubmit: (values: NoteEditorValues) => void
+}
+
+function NoteEditor({ mode, note, onCancel, onSubmit }: NoteEditorProps) {
+  const [title, setTitle] = useState(note?.title ?? "")
+  const [description, setDescription] = useState(note?.description ?? "")
+  const [descriptionError, setDescriptionError] = useState("")
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const cleanDescription = description.trim()
+    if (!cleanDescription) {
+      setDescriptionError("Add a description before saving your note.")
+      return
+    }
+
+    const cleanTitle = title.trim()
+    onSubmit({ title: cleanTitle, description: cleanDescription })
+  }
+
+  return (
+    <form
+      className="flex min-h-full flex-col"
+      onSubmit={handleSubmit}
+      noValidate
+    >
+      <div className="border-b px-6 py-6 md:px-8">
+        <h2 className="text-xl font-bold">
+          {mode === "new" ? "New Note" : "Edit Note"}
+        </h2>
+      </div>
+
+      <div className="flex flex-1 flex-col gap-6 p-6 md:p-8">
+        <Field>
+          <FieldLabel htmlFor="note-title">Title</FieldLabel>
+          <Input
+            id="note-title"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Optional title"
+            autoComplete="off"
+            maxLength={100}
+            className="h-11 rounded-2xl"
+          />
+        </Field>
+
+        <Field data-invalid={Boolean(descriptionError)}>
+          <FieldLabel htmlFor="note-description">
+            Description <span className="text-destructive">*</span>
+          </FieldLabel>
+          <Textarea
+            id="note-description"
+            value={description}
+            onChange={(event) => {
+              setDescription(event.target.value)
+              if (event.target.value.trim()) setDescriptionError("")
+            }}
+            placeholder="What do you want to remember?"
+            rows={8}
+            required
+            maxLength={2000}
+            aria-invalid={Boolean(descriptionError)}
+            aria-describedby={
+              descriptionError ? "note-description-error" : undefined
+            }
+            className="min-h-48"
+          />
+          <FieldError id="note-description-error">
+            {descriptionError}
+          </FieldError>
+        </Field>
+      </div>
+
+      <div className="sticky bottom-0 mt-auto flex flex-col-reverse gap-2 border-t bg-background/95 p-6 backdrop-blur sm:flex-row sm:justify-end md:px-8">
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button type="submit">
+          {mode === "new" ? "Create Note" : "Save Note"}
+        </Button>
+      </div>
+    </form>
   )
 }
