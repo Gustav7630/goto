@@ -32,43 +32,6 @@ import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 
-type Note = {
-  id: string
-  title: string
-  description: string
-  updatedAt: string
-}
-
-function createNoteId() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID()
-  }
-
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`
-}
-
-function readNotes(storageKey: string): Note[] {
-  try {
-    const storedNotes = window.localStorage.getItem(storageKey)
-    if (!storedNotes) return []
-
-    const parsedNotes: unknown = JSON.parse(storedNotes)
-    if (!Array.isArray(parsedNotes)) return []
-
-    return parsedNotes.filter(
-      (note): note is Note =>
-        typeof note === "object" &&
-        note !== null &&
-        typeof note.id === "string" &&
-        typeof note.title === "string" &&
-        typeof note.description === "string" &&
-        typeof note.updatedAt === "string"
-    )
-  } catch {
-    return []
-  }
-}
-
 export const Route = createFileRoute("/_authenticated/trips/$tripId")({
   component: TripPage,
 })
@@ -129,6 +92,43 @@ function TripPage() {
       </section>
     </main>
   )
+}
+
+type Note = {
+  id: string
+  title: string
+  description: string
+  updatedAt: string
+}
+
+function createNoteId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID()
+  }
+
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`
+}
+
+function readNotes(storageKey: string): Note[] {
+  try {
+    const storedNotes = window.localStorage.getItem(storageKey)
+    if (!storedNotes) return []
+
+    const parsedNotes: unknown = JSON.parse(storedNotes)
+    if (!Array.isArray(parsedNotes)) return []
+
+    return parsedNotes.filter(
+      (note): note is Note =>
+        typeof note === "object" &&
+        note !== null &&
+        typeof note.id === "string" &&
+        typeof note.title === "string" &&
+        typeof note.description === "string" &&
+        typeof note.updatedAt === "string"
+    )
+  } catch {
+    return []
+  }
 }
 
 function Gallery() {
@@ -310,12 +310,14 @@ function NoteEditor({ mode, note, onCancel, onSubmit }: NoteEditorProps) {
     event.preventDefault()
 
     const cleanDescription = description.trim()
+
     if (!cleanDescription) {
       setDescriptionError("Add a description before saving your note.")
       return
     }
 
     const cleanTitle = title.trim()
+
     onSubmit({ title: cleanTitle, description: cleanDescription })
   }
 
