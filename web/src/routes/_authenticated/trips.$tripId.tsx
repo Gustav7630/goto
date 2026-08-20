@@ -29,14 +29,6 @@ import {
 } from "@/components/ui/empty"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 
@@ -120,9 +112,9 @@ function TripPage() {
     setEditorOpen(true)
   }
 
-  const handleEditorOpenChange = (open: boolean) => {
-    setEditorOpen(open)
-    if (!open) resetEditor()
+  const closeEditor = () => {
+    setEditorOpen(false)
+    resetEditor()
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -209,7 +201,74 @@ function TripPage() {
           </TabsContent>
 
           <TabsContent value="gallery" className="min-h-0 overflow-y-auto">
-            {notes.length === 0 ? (
+            {editorOpen ? (
+              <form
+                className="flex min-h-full flex-col"
+                onSubmit={handleSubmit}
+                noValidate
+              >
+                <div className="border-b px-6 py-6 md:px-8">
+                  <h2 className="text-xl font-bold">
+                    {editingNote ? "Edit note" : "New note"}
+                  </h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {editingNote
+                      ? "Update the details for this trip note."
+                      : "Add something you want to remember for this trip."}
+                  </p>
+                </div>
+
+                <div className="flex flex-1 flex-col gap-6 p-6 md:p-8">
+                  <Field>
+                    <FieldLabel htmlFor="note-title">Title</FieldLabel>
+                    <Input
+                      id="note-title"
+                      value={title}
+                      onChange={(event) => setTitle(event.target.value)}
+                      placeholder="Optional title"
+                      autoComplete="off"
+                      maxLength={100}
+                      className="h-11 rounded-2xl"
+                    />
+                  </Field>
+
+                  <Field data-invalid={Boolean(descriptionError)}>
+                    <FieldLabel htmlFor="note-description">
+                      Description <span className="text-destructive">*</span>
+                    </FieldLabel>
+                    <Textarea
+                      id="note-description"
+                      value={description}
+                      onChange={(event) => {
+                        setDescription(event.target.value)
+                        if (event.target.value.trim()) setDescriptionError("")
+                      }}
+                      placeholder="What do you want to remember?"
+                      rows={8}
+                      required
+                      maxLength={2000}
+                      aria-invalid={Boolean(descriptionError)}
+                      aria-describedby={
+                        descriptionError ? "note-description-error" : undefined
+                      }
+                      className="min-h-48"
+                    />
+                    <FieldError id="note-description-error">
+                      {descriptionError}
+                    </FieldError>
+                  </Field>
+                </div>
+
+                <div className="sticky bottom-0 mt-auto flex flex-col-reverse gap-2 border-t bg-background/95 p-6 backdrop-blur sm:flex-row sm:justify-end md:px-8">
+                  <Button type="button" variant="outline" onClick={closeEditor}>
+                    Cancel
+                  </Button>
+                  <Button type="submit">
+                    {editingNote ? "Save changes" : "Create note"}
+                  </Button>
+                </div>
+              </form>
+            ) : notes.length === 0 ? (
               <Empty className="h-full min-h-96 rounded-none px-8">
                 <EmptyHeader>
                   <EmptyMedia variant="icon">
@@ -301,81 +360,6 @@ function TripPage() {
           mapStyle="https://tiles.openfreemap.org/styles/liberty"
         />
       </section>
-
-      <Sheet open={editorOpen} onOpenChange={handleEditorOpenChange}>
-        <SheetContent className="w-full sm:max-w-md">
-          <form
-            className="flex h-full flex-col"
-            onSubmit={handleSubmit}
-            noValidate
-          >
-            <SheetHeader className="border-b px-6 py-6">
-              <SheetTitle className="text-xl font-bold">
-                {editingNote ? "Edit note" : "New note"}
-              </SheetTitle>
-              <SheetDescription>
-                {editingNote
-                  ? "Update the details for this trip note."
-                  : "Add something you want to remember for this trip."}
-              </SheetDescription>
-            </SheetHeader>
-
-            <div className="flex flex-1 flex-col gap-6 overflow-y-auto p-6">
-              <Field>
-                <FieldLabel htmlFor="note-title">Title</FieldLabel>
-                <Input
-                  id="note-title"
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Optional title"
-                  autoComplete="off"
-                  maxLength={100}
-                  className="h-11 rounded-2xl"
-                />
-              </Field>
-
-              <Field data-invalid={Boolean(descriptionError)}>
-                <FieldLabel htmlFor="note-description">
-                  Description <span className="text-destructive">*</span>
-                </FieldLabel>
-                <Textarea
-                  id="note-description"
-                  value={description}
-                  onChange={(event) => {
-                    setDescription(event.target.value)
-                    if (event.target.value.trim()) setDescriptionError("")
-                  }}
-                  placeholder="What do you want to remember?"
-                  rows={8}
-                  required
-                  maxLength={2000}
-                  aria-invalid={Boolean(descriptionError)}
-                  aria-describedby={
-                    descriptionError ? "note-description-error" : undefined
-                  }
-                  className="min-h-48"
-                />
-                <FieldError id="note-description-error">
-                  {descriptionError}
-                </FieldError>
-              </Field>
-            </div>
-
-            <SheetFooter className="border-t p-6 sm:flex-row sm:justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleEditorOpenChange(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit">
-                {editingNote ? "Save changes" : "Create note"}
-              </Button>
-            </SheetFooter>
-          </form>
-        </SheetContent>
-      </Sheet>
     </main>
   )
 }
