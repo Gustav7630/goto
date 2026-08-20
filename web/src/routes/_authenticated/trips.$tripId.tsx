@@ -292,42 +292,13 @@ function TripPage() {
             ) : (
               <div className="flex min-h-full flex-col">
                 <div className="grid gap-4 p-6 md:p-8">
-                  {notes.map((note) => (
-                    <Card
-                      key={note.id}
-                      size="sm"
-                      className="rounded-3xl shadow-sm"
-                    >
-                      <CardHeader className="pr-24">
-                        <CardTitle className="line-clamp-2 text-base font-bold">
-                          {note.title || "Untitled note"}
-                        </CardTitle>
-                        <CardAction className="flex gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            aria-label={`Edit ${note.title || "untitled note"}`}
-                            onClick={() => openEditNote(note)}
-                          >
-                            <Edit3 aria-hidden="true" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                            aria-label={`Delete ${note.title || "untitled note"}`}
-                            onClick={() => deleteNote(note)}
-                          >
-                            <Trash2 aria-hidden="true" />
-                          </Button>
-                        </CardAction>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm leading-6 whitespace-pre-wrap text-muted-foreground">
-                          {note.description}
-                        </p>
-                      </CardContent>
-                    </Card>
+                  {notes.map(({ id, title, description, updatedAt }) => (
+                    <NoteCard
+                      id={id}
+                      title={title}
+                      description={description}
+                      updatedAt={updatedAt}
+                    />
                   ))}
                 </div>
 
@@ -361,5 +332,43 @@ function TripPage() {
         />
       </section>
     </main>
+  )
+}
+
+type NoteCardProps = Note & {
+  onEdit?: () => void
+  onDelete?: () => void
+}
+
+function NoteCard({ id, title, description, onEdit, onDelete }: NoteCardProps) {
+  return (
+    <Card key={id} className="gap-2">
+      <CardHeader className="flex flex-row items-center">
+        <CardTitle className="flex-1 font-bold">
+          {title || "Untitled"}
+        </CardTitle>
+        <CardAction>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={`Edit ${title || "untitled note"}`}
+            onClick={onEdit}
+          >
+            <Edit3 aria-hidden="true" />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="text-destructive hover:text-destructive"
+            aria-label={`Delete ${title || "untitled note"}`}
+            onClick={onDelete}
+          >
+            <Trash2 aria-hidden="true" />
+          </Button>
+        </CardAction>
+      </CardHeader>
+      <CardContent>{description}</CardContent>
+    </Card>
   )
 }
