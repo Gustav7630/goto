@@ -55,7 +55,7 @@ pnpm dev
 ```sh
 cd backend
 uv sync
-uv run uvicorn src.main:app --reload 
+uv run fastapi dev src/main.py --reload-dir src
 
 ```
 
