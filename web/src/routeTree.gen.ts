@@ -8,115 +8,115 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
-import { Route as PreferencesRouteImport } from './routes/preferences'
-import { Route as SignInRouteImport } from './routes/sign-in'
-import { Route as SignUpRouteImport } from './routes/sign-up'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
-import { Route as AuthenticatedTripsIndexRouteImport } from './routes/_authenticated/trips.index'
-import { Route as AuthenticatedTripsTripIdRouteImport } from './routes/_authenticated/trips.$tripId'
+import { Route as rootRouteImport } from "./routes/__root"
+import { Route as AuthenticatedRouteImport } from "./routes/_authenticated"
+import { Route as PreferencesRouteImport } from "./routes/preferences"
+import { Route as SignInRouteImport } from "./routes/sign-in"
+import { Route as SignUpRouteImport } from "./routes/sign-up"
+import { Route as AuthenticatedIndexRouteImport } from "./routes/_authenticated/index"
+import { Route as AuthenticatedCalendarRouteImport } from "./routes/_authenticated/calendar"
+import { Route as AuthenticatedTripsIndexRouteImport } from "./routes/_authenticated/trips.index"
+import { Route as AuthenticatedTripsTripIdRouteImport } from "./routes/_authenticated/trips.$tripId"
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
+  id: "/_authenticated",
   getParentRoute: () => rootRouteImport,
 } as any)
 const PreferencesRoute = PreferencesRouteImport.update({
-  id: '/preferences',
-  path: '/preferences',
+  id: "/preferences",
+  path: "/preferences",
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignInRoute = SignInRouteImport.update({
-  id: '/sign-in',
-  path: '/sign-in',
+  id: "/sign-in",
+  path: "/sign-in",
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignUpRoute = SignUpRouteImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
+  id: "/sign-up",
+  path: "/sign-up",
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
+  id: "/calendar",
+  path: "/calendar",
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedTripsIndexRoute = AuthenticatedTripsIndexRouteImport.update({
-  id: '/trips/',
-  path: '/trips/',
+  id: "/trips/",
+  path: "/trips/",
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedTripsTripIdRoute =
   AuthenticatedTripsTripIdRouteImport.update({
-    id: '/trips/$tripId',
-    path: '/trips/$tripId',
+    id: "/trips/$tripId",
+    path: "/trips/$tripId",
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AuthenticatedIndexRoute
-  '/preferences': typeof PreferencesRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
-  '/calendar': typeof AuthenticatedCalendarRoute
-  '/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
-  '/trips/': typeof AuthenticatedTripsIndexRoute
+  "/": typeof AuthenticatedIndexRoute
+  "/preferences": typeof PreferencesRoute
+  "/sign-in": typeof SignInRoute
+  "/sign-up": typeof SignUpRoute
+  "/calendar": typeof AuthenticatedCalendarRoute
+  "/trips/$tripId": typeof AuthenticatedTripsTripIdRoute
+  "/trips/": typeof AuthenticatedTripsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/preferences': typeof PreferencesRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
-  '/calendar': typeof AuthenticatedCalendarRoute
-  '/': typeof AuthenticatedIndexRoute
-  '/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
-  '/trips': typeof AuthenticatedTripsIndexRoute
+  "/preferences": typeof PreferencesRoute
+  "/sign-in": typeof SignInRoute
+  "/sign-up": typeof SignUpRoute
+  "/calendar": typeof AuthenticatedCalendarRoute
+  "/": typeof AuthenticatedIndexRoute
+  "/trips/$tripId": typeof AuthenticatedTripsTripIdRoute
+  "/trips": typeof AuthenticatedTripsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_authenticated': typeof AuthenticatedRouteWithChildren
-  '/preferences': typeof PreferencesRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
-  '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
-  '/_authenticated/trips/': typeof AuthenticatedTripsIndexRoute
+  "/_authenticated": typeof AuthenticatedRouteWithChildren
+  "/preferences": typeof PreferencesRoute
+  "/sign-in": typeof SignInRoute
+  "/sign-up": typeof SignUpRoute
+  "/_authenticated/calendar": typeof AuthenticatedCalendarRoute
+  "/_authenticated/": typeof AuthenticatedIndexRoute
+  "/_authenticated/trips/$tripId": typeof AuthenticatedTripsTripIdRoute
+  "/_authenticated/trips/": typeof AuthenticatedTripsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/preferences'
-    | '/sign-in'
-    | '/sign-up'
-    | '/calendar'
-    | '/trips/$tripId'
-    | '/trips/'
+    | "/"
+    | "/preferences"
+    | "/sign-in"
+    | "/sign-up"
+    | "/calendar"
+    | "/trips/$tripId"
+    | "/trips/"
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/preferences'
-    | '/sign-in'
-    | '/sign-up'
-    | '/calendar'
-    | '/'
-    | '/trips/$tripId'
-    | '/trips'
+    | "/preferences"
+    | "/sign-in"
+    | "/sign-up"
+    | "/calendar"
+    | "/"
+    | "/trips/$tripId"
+    | "/trips"
   id:
-    | '__root__'
-    | '/_authenticated'
-    | '/preferences'
-    | '/sign-in'
-    | '/sign-up'
-    | '/_authenticated/calendar'
-    | '/_authenticated/'
-    | '/_authenticated/trips/$tripId'
-    | '/_authenticated/trips/'
+    | "__root__"
+    | "/_authenticated"
+    | "/preferences"
+    | "/sign-in"
+    | "/sign-up"
+    | "/_authenticated/calendar"
+    | "/_authenticated/"
+    | "/_authenticated/trips/$tripId"
+    | "/_authenticated/trips/"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -126,61 +126,61 @@ export interface RootRouteChildren {
   SignUpRoute: typeof SignUpRoute
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
+    "/_authenticated": {
+      id: "/_authenticated"
+      path: ""
+      fullPath: "/"
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/preferences': {
-      id: '/preferences'
-      path: '/preferences'
-      fullPath: '/preferences'
+    "/preferences": {
+      id: "/preferences"
+      path: "/preferences"
+      fullPath: "/preferences"
       preLoaderRoute: typeof PreferencesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sign-in': {
-      id: '/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
+    "/sign-in": {
+      id: "/sign-in"
+      path: "/sign-in"
+      fullPath: "/sign-in"
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sign-up': {
-      id: '/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
+    "/sign-up": {
+      id: "/sign-up"
+      path: "/sign-up"
+      fullPath: "/sign-up"
       preLoaderRoute: typeof SignUpRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
-      fullPath: '/'
+    "/_authenticated/": {
+      id: "/_authenticated/"
+      path: "/"
+      fullPath: "/"
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/calendar': {
-      id: '/_authenticated/calendar'
-      path: '/calendar'
-      fullPath: '/calendar'
+    "/_authenticated/calendar": {
+      id: "/_authenticated/calendar"
+      path: "/calendar"
+      fullPath: "/calendar"
       preLoaderRoute: typeof AuthenticatedCalendarRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/trips/': {
-      id: '/_authenticated/trips/'
-      path: '/trips'
-      fullPath: '/trips/'
+    "/_authenticated/trips/": {
+      id: "/_authenticated/trips/"
+      path: "/trips"
+      fullPath: "/trips/"
       preLoaderRoute: typeof AuthenticatedTripsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/trips/$tripId': {
-      id: '/_authenticated/trips/$tripId'
-      path: '/trips/$tripId'
-      fullPath: '/trips/$tripId'
+    "/_authenticated/trips/$tripId": {
+      id: "/_authenticated/trips/$tripId"
+      path: "/trips/$tripId"
+      fullPath: "/trips/$tripId"
       preLoaderRoute: typeof AuthenticatedTripsTripIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
@@ -202,7 +202,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
-  AuthenticatedRouteChildren,
+  AuthenticatedRouteChildren
 )
 
 const rootRouteChildren: RootRouteChildren = {
