@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
 from supabase import Client, create_client
 
-from src.models import Note, NoteUpdate
+from src.models import Note, NoteUpdate, simpleNote
 
 load_dotenv()
 
@@ -18,13 +18,23 @@ supabase: Client = create_client(url,key)
 router = APIRouter()
 
 
-@router.post("/notes", response_model = Note)
-async def create_note(note: Note) -> Note:
-    result = supabase.table("notes").insert(note.model_dump(mode="json")).execute()
+@router.post("/notes", response_model = simpleNote)
+async def create_note(note: simpleNote):
+
+    newNote = note.model_dump(mode="json")
+  #  newNote["id"] = uuid.uuid4()
+  #  newNote["created_at"] = datetime.now(UTC).isoformat()
+  #  newNote["updated_at"] = newNote["created_at"]
+
+    
+    result = supabase.table("notes").insert(newNote).execute()
 
     if not result.data:
         raise HTTPException(status_code= 500, detail = "Unable to create note")
-    return Note(**result.data[0])
+
+    else:
+        
+        return Note(**result.data[0])
 
 
 @router.get("/notes/{note_id}", response_model=Note)
