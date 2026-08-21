@@ -4,9 +4,8 @@ from datetime import UTC, datetime
 
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
-from supabase import Client, create_client
-
 from src.models import Note, NoteUpdate, simpleNote
+from supabase import Client, create_client
 
 load_dotenv()
 
