@@ -45,7 +45,7 @@ const genderOptions = [
 
 export function AccountControlsDialogContent() {
   return (
-    <DialogContent className="h-5/8 p-0 sm:max-w-1/2">
+    <DialogContent className="h-5/8 p-0 sm:max-w-1/2 overflow-y-hidden">
       <DialogHeader className="sr-only">
         <DialogTitle>Account Controls</DialogTitle>
         <DialogDescription>
