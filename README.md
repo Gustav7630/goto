@@ -42,11 +42,22 @@ cp web/.env.example web/.env.local
 
 2. Edit environment variables in `web/.env.local`
 
-3. Run the frontend
+3. Run the backend
+
+```sh
+cd backend
+uv sync
+uv run python dev 
+
+```
+
+4. Run the frontend
 
 ```sh
 cd web
 pnpm install
 pnpm dev
 ```
+
+
 
