@@ -1,8 +1,13 @@
 import { Link } from "@tanstack/react-router"
+
 import { CirclePlus, Route, Calendar } from "lucide-react"
+
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
@@ -36,6 +41,17 @@ export function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <Avatar>
+                <AvatarFallback>LM</AvatarFallback>
+              </Avatar>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   )
 }
