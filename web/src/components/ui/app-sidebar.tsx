@@ -25,7 +25,7 @@ export function AppSidebar() {
             <SidebarMenuItem>
               <SidebarMenuButton render={<Link to="/" />}>
                 <CirclePlus />
-                <span>New Trip</span>
+                New Trip
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
@@ -35,7 +35,7 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton type="button">
+              <SidebarMenuButton render={<Link to="/calendar" />}>
                 <Calendar />
                 <span>Calendar</span>
               </SidebarMenuButton>

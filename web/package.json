@@ -14,6 +14,7 @@
   "dependencies": {
     "@base-ui/react": "^1.6.0",
     "@fontsource-variable/roboto-slab": "^5.2.8",
+    "@ilamy/calendar": "^2.0.3",
     "@supabase/supabase-js": "^2.111.0",
     "@tailwindcss/vite": "^4",
     "@tanstack/react-devtools": "^0.10.8",
@@ -21,6 +22,7 @@
     "@tanstack/react-router-devtools": "^1.167.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.22",
     "lucide-react": "^1.24.0",
     "maplibre-gl": "^5.0.0",
     "react": "^19.2.6",
