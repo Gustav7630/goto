@@ -2,7 +2,9 @@ import { Link } from "@tanstack/react-router"
 
 import { CirclePlus, Route, Calendar } from "lucide-react"
 
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { AccountControlsDialogContent } from "@/components/account-controls-dialog"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 
 import {
   Sidebar,
@@ -44,11 +46,19 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton>
-              <Avatar>
-                <AvatarFallback>LM</AvatarFallback>
-              </Avatar>
-            </SidebarMenuButton>
+            <Dialog>
+              <DialogTrigger
+                render={
+                  <SidebarMenuButton type="button">
+                    <Avatar>
+                      <AvatarFallback>LM</AvatarFallback>
+                    </Avatar>
+                    <span className="sr-only">Open account controls</span>
+                  </SidebarMenuButton>
+                }
+              />
+              <AccountControlsDialogContent />
+            </Dialog>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
