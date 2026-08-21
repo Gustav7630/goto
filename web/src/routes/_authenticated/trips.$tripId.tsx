@@ -36,14 +36,18 @@ import {
 import {
   Field,
   FieldError,
-  FieldLabel,
-  FieldSet,
   FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
 } from "@/components/ui/field"
 
 import { Input } from "@/components/ui/input"
 
+import { Separator } from "@/components/ui/separator"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 import { Textarea } from "@/components/ui/textarea"
 
 export const Route = createFileRoute("/_authenticated/trips/$tripId")({
@@ -52,14 +56,19 @@ export const Route = createFileRoute("/_authenticated/trips/$tripId")({
 
 function Component() {
   return (
-    <main className="flex min-h-svh w-full overflow-hidden bg-background">
-      <section className="flex flex-1 flex-col">
+    <main className="grid min-h-svh w-full grid-cols-2 overflow-hidden">
+      <section
+        aria-labelledby="trip-title"
+        className="flex min-w-0 flex-col overflow-hidden"
+      >
         <header className="p-8">
-          <h1 className="font-heading text-2xl font-bold">London Trip</h1>
+          <h1 id="trip-title" className="font-heading text-2xl font-bold">
+            London Trip
+          </h1>
         </header>
 
-        <Tabs defaultValue="gallery" className="min-h-0 flex-1 gap-0">
-          <TabsList variant="line" className="w-full gap-0 px-0">
+        <Tabs defaultValue="gallery" className="min-h-0 flex-1">
+          <TabsList variant="line" className="w-full">
             <TabsTrigger value="schedule">
               <CalendarDays aria-hidden="true" />
               Schedule
@@ -71,24 +80,24 @@ function Component() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="schedule">
-            <Empty className="h-full rounded-none">
+          <TabsContent
+            value="schedule"
+            className="flex min-h-0 overflow-hidden"
+          >
+            <Empty>
               <EmptyHeader>
                 <EmptyTitle>No events yet</EmptyTitle>
               </EmptyHeader>
             </Empty>
           </TabsContent>
 
-          <TabsContent value="gallery">
+          <TabsContent value="gallery" className="flex min-h-0 overflow-hidden">
             <Gallery />
           </TabsContent>
         </Tabs>
       </section>
 
-      <section
-        className="relative hidden min-w-0 flex-1 md:block"
-        aria-label="Trip map"
-      >
+      <section aria-label="Trip map">
         <Map
           initialViewState={{
             latitude: 51.50814652905202,
@@ -209,7 +218,7 @@ function Gallery() {
 
   if (notes.length === 0) {
     return (
-      <Empty className="h-full">
+      <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <StickyNote aria-hidden="true" />
@@ -220,10 +229,7 @@ function Gallery() {
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button
-            className="h-16 w-full text-base font-bold [&_svg]:size-6"
-            onClick={openNewNote}
-          >
+          <Button className="w-full" onClick={openNewNote}>
             <Plus data-icon="inline-start" aria-hidden="true" />
             New note
           </Button>
@@ -233,8 +239,8 @@ function Gallery() {
   }
 
   return (
-    <div className="flex min-h-full flex-col">
-      <div className="grid gap-4 p-6 md:p-8">
+    <section aria-label="Trip notes" className="flex min-h-0 flex-1 flex-col">
+      <div className="grid min-h-0 flex-1 content-start gap-4 overflow-y-auto p-8">
         {notes.map((note) => (
           <NoteCard
             key={note.id}
@@ -245,16 +251,15 @@ function Gallery() {
         ))}
       </div>
 
-      <div className="sticky bottom-0 mt-auto border-t bg-background/95 p-6 backdrop-blur md:px-8">
-        <Button
-          className="h-14 w-full text-base font-bold [&_svg]:size-6"
-          onClick={openNewNote}
-        >
+      <Separator />
+
+      <footer className="p-8">
+        <Button className="w-full" onClick={openNewNote}>
           <Plus data-icon="inline-start" aria-hidden="true" />
           New note
         </Button>
-      </div>
-    </div>
+      </footer>
+    </section>
   )
 }
 
@@ -265,12 +270,10 @@ type NoteCardProps = Note & {
 
 function NoteCard({ title, description, onEdit, onDelete }: NoteCardProps) {
   return (
-    <Card className="gap-2">
-      <CardHeader className="flex flex-row items-center">
-        <CardTitle className="flex-1 font-bold">
-          {title || "Untitled"}
-        </CardTitle>
-        <CardAction>
+    <Card size="sm">
+      <CardHeader>
+        <CardTitle>{title || "Untitled"}</CardTitle>
+        <CardAction className="flex gap-2">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -281,9 +284,8 @@ function NoteCard({ title, description, onEdit, onDelete }: NoteCardProps) {
           </Button>
 
           <Button
-            variant="ghost"
+            variant="destructive"
             size="icon-sm"
-            className="text-destructive hover:text-destructive"
             aria-label={`Delete ${title || "untitled note"}`}
             onClick={onDelete}
           >
@@ -291,7 +293,7 @@ function NoteCard({ title, description, onEdit, onDelete }: NoteCardProps) {
           </Button>
         </CardAction>
       </CardHeader>
-      <CardContent>{description}</CardContent>
+      <CardContent className="whitespace-pre-wrap">{description}</CardContent>
     </Card>
   )
 }
@@ -329,10 +331,12 @@ function NoteEditor({ mode, note, onCancel, onSubmit }: NoteEditorProps) {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="flex h-full flex-col gap-8 p-8"
+      className="flex min-h-0 flex-1 p-8"
     >
-      <FieldSet className="flex-1">
-        <FieldGroup className="flex-1">
+      <FieldSet className="min-h-0 flex-1">
+        <FieldLegend>{mode === "new" ? "New note" : "Edit note"}</FieldLegend>
+
+        <FieldGroup className="min-h-0 flex-1">
           <Field>
             <FieldLabel htmlFor="note-title">Title</FieldLabel>
             <Input
@@ -342,7 +346,6 @@ function NoteEditor({ mode, note, onCancel, onSubmit }: NoteEditorProps) {
               placeholder="Optional title"
               autoComplete="off"
               maxLength={100}
-              className="h-11 rounded-2xl"
             />
           </Field>
 
@@ -384,7 +387,7 @@ function NoteEditor({ mode, note, onCancel, onSubmit }: NoteEditorProps) {
             </Button>
 
             <Button type="submit" className="flex-1">
-              {mode === "new" ? "Create Note" : "Save Note"}
+              {mode === "new" ? "Create note" : "Save note"}
             </Button>
           </Field>
         </FieldGroup>
