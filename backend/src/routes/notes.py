@@ -4,8 +4,9 @@ from datetime import UTC, datetime
 
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
-from models import Note, NoteUpdate, simpleNote
 from supabase import Client, create_client
+
+from models import Note, NoteUpdate, SimpleNote
 
 load_dotenv()
 
@@ -17,8 +18,8 @@ supabase: Client = create_client(url,key)
 router = APIRouter()
 
 
-@router.post("/notes", response_model = simpleNote)
-async def create_note(note: simpleNote):
+@router.post("/notes", response_model = SimpleNote)
+async def create_note(note: SimpleNote):
 
     newNote = note.model_dump(mode="json")
     result = supabase.table("notes").insert(newNote).execute()

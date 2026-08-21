@@ -16,7 +16,7 @@ class NoteUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
     
-class simpleNote(BaseModel):
+class SimpleNote(BaseModel):
     title: str 
     description: str 
     
