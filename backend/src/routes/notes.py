@@ -2,9 +2,8 @@
 import uuid
 from datetime import UTC, datetime
 
-from fastapi import APIRouter, HTTPException, Response
-
 from db import supabase
+from fastapi import APIRouter, HTTPException, Response
 from models import Note, NoteUpdate, SimpleNote
 
 router = APIRouter()
