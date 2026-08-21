@@ -22,11 +22,6 @@ router = APIRouter()
 async def create_note(note: simpleNote):
 
     newNote = note.model_dump(mode="json")
-  #  newNote["id"] = uuid.uuid4()
-  #  newNote["created_at"] = datetime.now(UTC).isoformat()
-  #  newNote["updated_at"] = newNote["created_at"]
-
-    
     result = supabase.table("notes").insert(newNote).execute()
 
     if not result.data:
